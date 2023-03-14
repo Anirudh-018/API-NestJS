@@ -1,18 +1,10 @@
 import { Post,Get,Controller, Body ,Param,ParseIntPipe,Patch,Delete, HttpException, HttpStatus} from '@nestjs/common';
-// import { Student } from 'src/typeorm/entities/Students';
 import { CreateStudentDto,UpdateStudentDto } from './dto/student.dto';
 import { StudentService } from './student.service';
-// import { Repository } from 'typeorm';
 
 @Controller('student')
 export class StudentController {
     constructor(private studentService:StudentService){}
-    // constructor(@InjectRepository(Student) private studentRepository:Repository<Student>){}
-    // createStudent(@Body()createStudentDto: CreateStudentDto) {
-        //     const newStu = await this.studentService.createStudent(student);
-        //     //return response.status(HttpStatus.CREATED);
-        //     return this.studentService.createStudent(createStudentDto)
-        // }
     @Post()
     createStudent(@Body() createStudent:CreateStudentDto){
         this.studentService.createStudent(createStudent);

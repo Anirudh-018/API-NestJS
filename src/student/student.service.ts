@@ -6,9 +6,6 @@ import { CreateStudentDto, UpdateStudentDto } from './dto/student.dto';
 @Injectable()
 export class StudentService {
     constructor(@InjectRepository(Student) private studentRepository:Repository<Student>){}
-    // createStudent(createStudentDto:CreateStudentDto){
-    //     return createStudentDto;
-    // }
     async fetchStudents(id):Promise<Student>{
         if(await this.studentRepository.countBy({id})>0){
             return this.studentRepository.findOneBy({id});
