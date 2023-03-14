@@ -1,11 +1,13 @@
-import { Post,Get,Controller, Body ,Param,ParseIntPipe,Patch,Delete} from '@nestjs/common';
-import { Student } from 'src/typeorm/entities/Students';
+import { Post,Get,Controller, Body ,Param,ParseIntPipe,Patch,Delete, HttpException, HttpStatus} from '@nestjs/common';
+// import { Student } from 'src/typeorm/entities/Students';
 import { CreateStudentDto,UpdateStudentDto } from './dto/student.dto';
 import { StudentService } from './student.service';
+// import { Repository } from 'typeorm';
 
 @Controller('student')
 export class StudentController {
     constructor(private studentService:StudentService){}
+    // constructor(@InjectRepository(Student) private studentRepository:Repository<Student>){}
     // createStudent(@Body()createStudentDto: CreateStudentDto) {
         //     const newStu = await this.studentService.createStudent(student);
         //     //return response.status(HttpStatus.CREATED);
@@ -14,7 +16,7 @@ export class StudentController {
     @Post()
     createStudent(@Body() createStudent:CreateStudentDto){
         this.studentService.createStudent(createStudent);
-        return createStudent;
+        throw new HttpException('ok', HttpStatus.ACCEPTED);
     }
     @Get(':id')
     async fetchStudents(@Param('id',ParseIntPipe) id:number){
@@ -25,10 +27,9 @@ export class StudentController {
     async updateStudentById(@Param('id',ParseIntPipe) id:number,
     @Body() updateStudentDto:UpdateStudentDto){
         await this.studentService.updateStudent(id,updateStudentDto);
-        // return this.studentService.fetchStudents({id})
     }
     @Delete(':id')
-    deleteStudentById(@Param('id',ParseIntPipe) id:number){
+    async deleteStudentById(@Param('id',ParseIntPipe) id:number){
         this.studentService.deleteStudent(id)
     }
 
