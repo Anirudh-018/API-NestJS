@@ -10,8 +10,10 @@ export class Student{
     department:string
     @Column({default:null})
     age:number
-    @Column({default:null})
+    @Column({type:'float',default:null})
     gpa:number
-    @Column()
+    @Column({default:null})
     createdAt:Date
+    @Column({default:null})
+    modifiedAt:Date
 }

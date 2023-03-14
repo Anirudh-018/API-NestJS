@@ -15,8 +15,7 @@ import { Student } from './typeorm/entities/Students';
       password: 'sairam123',
       database: 'student',
       entities: [Student],
-      synchronize: true,
-      dropSchema: true
+      synchronize: true
     }),
     StudentModule
   ],
