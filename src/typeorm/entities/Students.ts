@@ -1,16 +1,17 @@
-import { type } from "os";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name:'students'})
 export class Student{
     @PrimaryGeneratedColumn({type:'bigint'})
     id:number
-    @Column()
+    @Column({default:null})
     name:string
-    @Column()
+    @Column({default:null})
     department:string
+    @Column({default:null})
+    age:number
+    @Column({default:null})
+    gpa:number
     @Column()
     createdAt:Date
-    @Column()
-    updatedAt:Date
 }
