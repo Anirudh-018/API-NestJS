@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Student } from 'src/typeorm/entities/Students';
 import { Repository } from 'typeorm';
 import { CreateStudentDto, UpdateStudentDto } from './dto/student.dto';
-
 @Injectable()
 export class StudentService {
     constructor(@InjectRepository(Student) private studentRepository:Repository<Student>){}

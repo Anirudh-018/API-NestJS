@@ -2,9 +2,7 @@ import { Post,Get,Controller, Body ,Param,ParseIntPipe,Patch,Delete, HttpExcepti
 import { CreateStudentDto,UpdateStudentDto } from './dto/student.dto';
 import { StudentService } from './student.service';
 import { Response,Request } from 'express';
-import { IsEmpty } from 'class-validator';
-import { ValidationPipe } from '@nestjs/common/pipes';
-
+import { mergeSortScore,mergeSortRegId } from './student.helperSort';
 @Controller('student')
 export class StudentController {
     constructor(private studentService:StudentService){}
@@ -22,14 +20,13 @@ export class StudentController {
         }
     }
 
-    @Get(':id')
+    @Get('/fetch/:id')
     async fetchStudents(
         @Param('id',ParseIntPipe) id:number,
-        @Req() req:Request,
-        @Res() res: Response,
+        @Res() res: Response
         )
         {
-            const students=await this.studentService.fetchStudents({id});
+            const students=await this.studentService.fetchStudents(id);
             if(students){
                 const status=HttpStatus.OK+" found";
                 res.send({status,students})
@@ -39,8 +36,8 @@ export class StudentController {
             }
         }
     @Get()
-    fetchAllStudents(){
-        return this.studentService.fetchAllStudents();
+    async fetchAllStudents(){
+        return await this.studentService.fetchAllStudents();
     }
 
     @Patch(':id')
@@ -62,5 +59,15 @@ export class StudentController {
         else{
             res.send(HttpStatus.NOT_FOUND+" not found");
         }
+    }
+    @Get('weighted_score')
+    async fetchAllWeightedScore(){
+        const a=mergeSortScore(await this.studentService.fetchAllStudents());
+        return a
+    }
+    @Get('registration_date')
+    async fetchAllRegistrationId(){
+        const a=mergeSortRegId(await this.studentService.fetchAllStudents());
+        return a;
     }
 }
