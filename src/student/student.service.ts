@@ -29,19 +29,19 @@ export class StudentService {
         if(await this.studentRepository.countBy({id})>0){
             let row=await this.studentRepository.findOneBy({id});
             return this.studentRepository.save({...row,...updateStudentData});
+            // return this.studentRepository.findOneBy({id})
         }
         else{
             throw new HttpException('no such row found', HttpStatus.FORBIDDEN);
-
         }
     }
     async deleteStudent(id:number){
         if(await this.studentRepository.countBy({id})>0){
             this.studentRepository.delete({id});
-            return null
+            return 1;
         }
         else{
-            throw new HttpException('no such row found', HttpStatus.FORBIDDEN);
+            return 0;
         }
     }
 }
