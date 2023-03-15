@@ -13,6 +13,10 @@ export class Student{
     @Column({type:'float',default:null})
     gpa:number
     @Column({default:null})
+    registrationDate:Date
+    @Column({type:'float',default:null})
+    attendance
+    @Column({default:null})
     createdAt:Date
     @Column({default:null})
     modifiedAt:Date

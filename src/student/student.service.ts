@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Student } from 'src/typeorm/entities/Students';
 import { Repository } from 'typeorm';
 import { CreateStudentDto, UpdateStudentDto } from './dto/student.dto';
+
 @Injectable()
 export class StudentService {
     constructor(@InjectRepository(Student) private studentRepository:Repository<Student>){}
@@ -10,14 +11,19 @@ export class StudentService {
         if(await this.studentRepository.countBy({id})>0){
             return this.studentRepository.findOneBy({id});
         }
+        else{
+            throw new HttpException("Record not found",HttpStatus.BAD_REQUEST);
+        }
+    }
+    fetchAllStudents():Promise<Student[]>{
+        return this.studentRepository.find();
     }
     createStudent(createStudentDetails:CreateStudentDto){
         const newStudent=this.studentRepository.create({
             ...createStudentDetails,createdAt:new Date(),modifiedAt:new Date()
         });
         this.studentRepository.save(newStudent);
-        
-        return this.fetchStudents(newStudent.id);
+        return newStudent;
     }
     async updateStudent(id:number,updateStudentData:UpdateStudentDto){
         if(await this.studentRepository.countBy({id})>0){
@@ -32,7 +38,7 @@ export class StudentService {
     async deleteStudent(id:number){
         if(await this.studentRepository.countBy({id})>0){
             this.studentRepository.delete({id});
-            return 0
+            return null
         }
         else{
             throw new HttpException('no such row found', HttpStatus.FORBIDDEN);
