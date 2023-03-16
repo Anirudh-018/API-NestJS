@@ -3,6 +3,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { StudentModule } from './student/student.module';
 import { Student } from './typeorm/entities/Students';
 
+//this is the main module for the server
+//app module imports the sql class to degine the database and its porperties 
+//it also imports student module which in turns is the functionality fo rthe server
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -18,4 +21,4 @@ import { Student } from './typeorm/entities/Students';
     StudentModule
   ],
 })
-export class AppModule {}
+export class AppModule { }
