@@ -45,8 +45,8 @@ export class StudentService {
     async updateStudent(id: number, updateStudentData: UpdateStudentDto) {
         if (await this.studentRepository.countBy({ id }) > 0) {
             let row = await this.studentRepository.findOneBy({ id });
-            return this.studentRepository.save({ ...row, ...updateStudentData });
-            // return this.studentRepository.findOneBy({id})
+            await this.studentRepository.save({ ...row, ...updateStudentData });
+            return await this.studentRepository.findOneBy({id})
         }
         else {
             throw new HttpException('no such row found', HttpStatus.FORBIDDEN);

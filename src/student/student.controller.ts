@@ -56,7 +56,7 @@ export class StudentController {
     
     //used to update the records in database and to view the updated result
     //Endpoint is UPDATE/id where id is the id of the student
-    @Patch('/UPDATE:id')
+    @Patch('/UPDATE/:id')
     async updateStudentById(@Param('id', ParseIntPipe) id: number,
         @Body() updateStudentDto: UpdateStudentDto, @Res() res: Response) {
         const type = { contentType: 'application/json' }
@@ -82,8 +82,8 @@ export class StudentController {
 
     //This request method is used to fetch the record sorted in the order of weighted score in descending order of score
     //weighted score = 0.7*gpa + 0.3* attendance
-    //Endpoint is READ/weighted_score
-    @Get('READ/weighted_score')
+    //Endpoint is weighted_score
+    @Get("Weighted_score")
     async fetchAllWeightedScore(@Res() res: Response) {
         const sortedStudents = mergeSortScore(await this.studentService.fetchAllStudents());
         const type = { contentType: 'application/json' }
@@ -94,8 +94,8 @@ export class StudentController {
 
     //This request method is used to fetch the record sorted in the order of weighted score
     //weighted score = 0.7*gpa + 0.3* attendance
-    //Endpoint is READ/weighted_score
-    @Get('READ/registration_date')
+    //Endpoint is registration_date
+    @Get('registration_date')
     async fetchAllRegistrationId(@Res() res: Response) {
         const sortedStudents = mergeSortRegId(await this.studentService.fetchAllStudents());
         const type = { contentType: 'application/json' }
