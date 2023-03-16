@@ -34,7 +34,6 @@ export class StudentController {
         if (students) {
             const type = { contentType: 'application/json' }
             const status = HttpStatus.OK + " found";
-            console.log({ status, type, students })
             res.send({ status, type, students })
         }
         else {
@@ -61,7 +60,7 @@ export class StudentController {
         @Body() updateStudentDto: UpdateStudentDto, @Res() res: Response) {
         const type = { contentType: 'application/json' }
         const stud = await this.studentService.updateStudent(id, updateStudentDto);
-        const status = HttpStatus.OK + " OK";
+        const status = HttpStatus.OK + " OK"
         res.send({ status, type, stud });
         return stud;
     }
