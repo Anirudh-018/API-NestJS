@@ -45,7 +45,7 @@ export class StudentService {
     async updateStudent(id: number, updateStudentData: UpdateStudentDto) {
         if (await this.studentRepository.countBy({ id }) > 0) {
             let row = await this.studentRepository.findOneBy({ id });
-            await this.studentRepository.save({ ...row, ...updateStudentData });
+            await this.studentRepository.save({ ...row, ...updateStudentData,modifiedAt:new Date() });
             return await this.studentRepository.findOneBy({id})
         }
         else {
