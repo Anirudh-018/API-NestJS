@@ -63,6 +63,15 @@ $ npm run test:cov
 ## visit this link for documnetation and examples of this CRUD api
 https://documenter.getpostman.com/view/26303552/2s93Jxrgiv
 
+## Project building experience
+
+Started the project on 12-03-2023, reviewed through lots of websites and yt for the basics of Nest.js and basics op API's. Started of with implementing through the mongoose module and mongoDb initially and switched to Typeorm learning it's versitality .Had to restart the project again from scratch after realising the mistake, started anew on 14-03-2023 and went through the whole studying process along with https://github.com/Dragnias cooperating and finishing the project was much faster and easier. We were able to completely understand the work to be done and completed it by 16-03-2023. The RESTful API works as per requirement and can be implemeted for various other data models. Used postman for testing the API and made a documentation using its doc tool. 
+Working with the assignment was fun and the whole process was thrilling
+
+## Future outcomes
+
+Will change the database from local to cloud storage so that all implementation can be experienced first hand.
+
 ## future development
 >test out the same with several other database modules like the mongoose module for MongoDB.
 >try out cloud database instead of a local one.
