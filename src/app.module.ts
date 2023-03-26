@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { StudentModule } from './student/student.module';
 import { Student } from './typeorm/entities/Students';
@@ -8,13 +9,14 @@ import { Student } from './typeorm/entities/Students';
 //it also imports student module which in turns is the functionality fo rthe server
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'sairam123',
-      database: 'student',
+      host: process.env.DB_HOST,
+      port: Number (process.env.PORT),
+      username: process.env.DB_USERNAME,
+      password: process.env.PASSWORD,
+      database: process.env.DATABASE,
       entities: [Student],
       synchronize: true
     }),

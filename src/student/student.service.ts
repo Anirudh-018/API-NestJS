@@ -1,5 +1,5 @@
 //important imports
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 //invokes the student entity
@@ -10,17 +10,20 @@ import { Repository } from 'typeorm';
 import { CreateStudentDto, UpdateStudentDto } from './dto/student.dto';
 @Injectable()
 export class StudentService {
-    
+    private readonly logger =new Logger(StudentService.name);
     // uses the repository class in the typeorm to use the different typeorm methods and it is injected as a dependancy in the students service
     constructor(@InjectRepository(Student) private studentRepository: Repository<Student>) {}
     //the methods in the studentRepository object simplies out db operations
 
     //method to fetch the students by id as a search parameter
     async fetchStudents(id): Promise<Student> {
+        this.logger.log("hit the fetch students by id");
         if (await this.studentRepository.countBy({ id }) > 0) {
+            this.logger.debug("found");
             return this.studentRepository.findOneBy({ id });
         }
         else {
+            this.logger.error("not found")
             throw new HttpException("Record not found", HttpStatus.BAD_REQUEST);
         }
     }

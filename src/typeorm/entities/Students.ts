@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, IsNull, PrimaryGeneratedColumn } from "typeorm";
 
 //defines the database schema i.e the different columns, their data types and the constrains
 //used to refer to all the returned records in response and the input parameters in the request
