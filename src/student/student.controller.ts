@@ -1,9 +1,14 @@
 //imports for the required modules from the installed packages
-import { Post, Get, Controller, Body, Param, ParseIntPipe, Patch, Delete, HttpException, HttpStatus, Res } from '@nestjs/common';
+import { Post, Get, Controller, Body, Param, ParseIntPipe, Patch, Delete, HttpException, HttpStatus, Res ,Query,UseGuards} from '@nestjs/common';
 import { CreateStudentDto, UpdateStudentDto } from './dto/student.dto';
 import { StudentService } from './student.service';
 import { Response } from 'express';
 import { mergeSortScore, mergeSortRegId } from './student.helperSort';
+import { Parent } from 'src/typeorm/entities/Parent';
+import { AgeFilter } from './dto/list.students';
+import { CurrentUser } from 'src/auth/current-user.decorator';
+import { User } from 'src/typeorm/entities/User';
+import { AuthGuard } from '@nestjs/passport';
 
 //definition for the controller class
 @Controller('student')
@@ -14,7 +19,7 @@ export class StudentController {
     //endpoint is CREATE
     @Post('CREATE')
     //the dto's used here are specyfing the input and the return type of the response and request
-    createStudent(@Body() createStudent: CreateStudentDto,
+    createStudent(@Body() createStudent,
         @Res() res: Response,) {
         if (Object.keys(createStudent).length > 0) {
             const stud = this.studentService.createStudent(createStudent);
@@ -63,7 +68,7 @@ export class StudentController {
     //the dto's used here are specyfing the input and the return type of the response and request
     @Patch('/UPDATE/:id')
     async updateStudentById(@Param('id', ParseIntPipe) id: number,
-        @Body() updateStudentDto: UpdateStudentDto, @Res() res: Response) {
+        @Body() updateStudentDto: UpdateStudentDto, @Res() res: Response ){
         const type = { contentType: 'application/json' }
         const stud = await this.studentService.updateStudent(id, updateStudentDto);
         const status = HttpStatus.OK + " OK"
@@ -107,5 +112,12 @@ export class StudentController {
         const type = { contentType: 'application/json' }
         const status = HttpStatus.OK + " found";
         res.send({ status, type, sortedStudents })
+    }
+
+    @Post()
+    @UseGuards(AuthGuard('jwtGate'))
+    async create(@Body() input:CreateStudentDto,
+    @CurrentUser() user:User){
+        return await this.studentService.createStudents(input,user);
     }
 }

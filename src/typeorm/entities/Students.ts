@@ -1,4 +1,6 @@
-import { Column, Entity, IsNull, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, IsNull, JoinColumn, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Parent } from "./Parent";
+import { User } from "./User";
 
 //defines the database schema i.e the different columns, their data types and the constrains
 //used to refer to all the returned records in response and the input parameters in the request
@@ -22,4 +24,13 @@ export class Student {
     createdAt: Date
     @Column({ default: null })
     modifiedAt: Date
+    @OneToMany(()=>Parent,(parent)=>parent.child,{eager:true,cascade:true})
+    parents:Parent[]
+
+    parentsAlive?:number;
+
+    @ManyToMany(()=>User,(user)=>user.authorized)
+    @JoinColumn({name:'authorizerId'})
+    authorizer:User;
+    
 }

@@ -1,10 +1,14 @@
 //important imports
 import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { IsJSON } from 'class-validator';
+import { Parent } from 'src/typeorm/entities/Parent';
 
 //invokes the student entity
 import { Student } from 'src/typeorm/entities/Students';
-import { Repository } from 'typeorm';
+import { User } from 'src/typeorm/entities/User';
+import { QueryBuilder, Repository } from 'typeorm';
+import { AgeFilter, WhenAgeFilter } from './dto/list.students';
 
 //invokes the dtos to be used
 import { CreateStudentDto, UpdateStudentDto } from './dto/student.dto';
@@ -12,15 +16,37 @@ import { CreateStudentDto, UpdateStudentDto } from './dto/student.dto';
 export class StudentService {
     private readonly logger =new Logger(StudentService.name);
     // uses the repository class in the typeorm to use the different typeorm methods and it is injected as a dependancy in the students service
-    constructor(@InjectRepository(Student) private studentRepository: Repository<Student>) {}
+    constructor(@InjectRepository(Student) private studentRepository: Repository<Student>,
     //the methods in the studentRepository object simplies out db operations
+    @InjectRepository(Parent) private parentRepostory:Repository<Parent>){}
+
+    //base query to fetch all the data
+    async fetchBase(){
+        const stud=await this.studentRepository.createQueryBuilder('s')
+        .orderBy('s.name','ASC')
+        return stud;
+    }
+
+    //method to fetch all the student records as an array of student class objects
+    async fetchAllStudents(): Promise<Student[]> {
+        const allData=(await this.fetchBase()).getMany()
+        return allData ;
+    }
+
+    //to fetch all the details along with parents
+    async fetchParentsAlso(){
+        return (await this.fetchBase()).loadRelationCountAndMap('s.parentsAlive','s.parents')
+    }
+
 
     //method to fetch the students by id as a search parameter
-    async fetchStudents(id): Promise<Student> {
+    async fetchStudents(id){
         this.logger.log("hit the fetch students by id");
         if (await this.studentRepository.countBy({ id }) > 0) {
             this.logger.debug("found");
-            return this.studentRepository.findOneBy({ id });
+            const query=(await this.fetchParentsAlso()).andWhere('s.id=:id',{id}) ;
+            this.logger.debug(query.getSql())
+            return await query.getOne()
         }
         else {
             this.logger.error("not found")
@@ -28,20 +54,15 @@ export class StudentService {
         }
     }
 
-    //method to fetch all the student records as an array of student class objects
-    fetchAllStudents(): Promise<Student[]> {
-        return this.studentRepository.find();
-    }
-
     //method to create a student record in the database and to save it permanetly 
     //it returns a student object of inserted student
-    createStudent(createStudentDetails: CreateStudentDto) {
+    async createStudent(createStudentDetails: CreateStudentDto) {
         const newStudent = this.studentRepository.create({
             //the cureatd and modified dates is set to current date.
             ...createStudentDetails, createdAt: new Date(), modifiedAt: new Date()
         });
         //the save is used to commit the changes to the db 
-        this.studentRepository.save(newStudent);
+        await this.studentRepository.save(newStudent);
         return newStudent;
     }
 
@@ -73,5 +94,13 @@ export class StudentService {
         else {
             return 0;
         }
+    }
+
+    async createStudents(input:CreateStudentDto,user:User):Promise<Student>{
+        return await this.studentRepository.save({
+            ...input,
+            authorized:user,
+        }
+        )
     }
 }

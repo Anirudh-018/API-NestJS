@@ -20,3 +20,12 @@ export class UpdateStudentDto {
     createdAt: Date;
     modifiedAt: Date;
 }
+
+export class UserDto{
+    name:string;
+    id:number;
+    username:string;
+    firstName:string;
+    lastName:string;
+    password:string;
+}
