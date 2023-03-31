@@ -1,5 +1,5 @@
-import { Controller,Post ,Get,UseGuards, Res,} from '@nestjs/common';
-import { Req } from '@nestjs/common/decorators';
+import { Controller,Post ,Get,UseGuards, Res,ParseIntPipe} from '@nestjs/common';
+import { Param, Req } from '@nestjs/common/decorators';
 import { UnauthorizedException } from '@nestjs/common/exceptions';
 import { Logger } from '@nestjs/common/services';
 import { AuthGuard } from '@nestjs/passport';
@@ -26,18 +26,39 @@ export class AuthController {
         return "success";
     }
 
-    @Get('profile')
-    async getProfile(
+    //authenticated student read all
+    @Get('/READ')
+    async fetchStudents(
     @Req() request:Request){
         try{
             console.log("entered");
             const cookie=request.cookies['jwt'];
-            const data=await this.authService.getData(cookie);
+            const data=await this.authService.getData(cookie);                              
             if(!data){
                 throw new UnauthorizedException()
             }
 
             return await this.studentservice.fetchAllStudents();
+        }
+        catch(e){
+            console.log('helleo')
+            throw new UnauthorizedException();
+        }
+    }
+
+    //authenticated read students by id
+    @Get('/READ/:id')
+    async fetchStudent(
+    @Req() request:Request,@Param('id', ParseIntPipe) id: number,){
+        try{
+            console.log("entered");
+            const cookie=request.cookies['jwt'];
+            const data=await this.authService.getData(cookie);                              
+            if(!data){
+                throw new UnauthorizedException()
+            }
+
+            return await this.studentservice.fetchStudents(id);
         }
         catch(e){
             console.log('helleo')
